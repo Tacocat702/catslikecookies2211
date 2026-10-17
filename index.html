@@ -2,15 +2,23 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Cat Searcher · catslikecookies2211</title>
+  <title>catslikecookies2211 · Chat</title>
   <style>
     :root {
       --bg: #020617;
-      --card: #0f172a;
-      --accent: #f97316;
+      --bg-alt: #0b1120;
+      --sidebar: #020617;
+      --channel-bg: #0f172a;
+      --channel-active: #1d283a;
+      --chat-bg: #020617;
+      --input-bg: #0f172a;
+      --accent: #22c55e;
       --accent2: #38bdf8;
+      --danger: #ef4444;
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --user-me: #38bdf8;
+      --user-bot: #22c55e;
     }
 
     * {
@@ -21,266 +29,541 @@
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #1e293b, #020617);
+      background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      width: 100%;
+      height: 100%;
+    }
+
+    .sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid #1f2937;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 12px;
+      border-bottom: 1px solid #1f2937;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 24px;
+      gap: 8px;
     }
 
-    .shell {
-      width: min(700px, 100%);
-      padding: 20px;
-      border-radius: 20px;
-      background: radial-gradient(circle at top left, rgba(248,250,252,0.08), rgba(15,23,42,0.95));
-      border: 1px solid rgba(148,163,184,0.6);
-      box-shadow: 0 24px 60px rgba(15,23,42,0.9);
+    .logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: conic-gradient(from 180deg, #22c55e, #38bdf8, #a855f7, #22c55e);
+      box-shadow: 0 0 16px rgba(34,197,94,0.7);
     }
 
-    .title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 6px;
+    .workspace-name {
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .title span {
-      background: linear-gradient(120deg, #f97316, #38bdf8, #a855f7);
-      -webkit-background-clip: text;
-      color: transparent;
+    .sidebar-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      padding: 10px 12px 4px;
     }
 
-    .sub {
+    .channel-list {
+      padding: 4px 6px 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .channel {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      border-radius: 6px;
       font-size: 13px;
       color: var(--muted);
-      margin-bottom: 16px;
+      cursor: pointer;
     }
 
-    .search-row {
+    .channel span.hash {
+      color: #4b5563;
+    }
+
+    .channel.active {
+      background: var(--channel-active);
+      color: var(--text);
+    }
+
+    .channel:hover {
+      background: var(--channel-bg);
+    }
+
+    .sidebar-footer {
+      padding: 10px 12px;
+      border-top: 1px solid #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #38bdf8, #0ea5e9);
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .user-status {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .chat {
+      display: flex;
+      flex-direction: column;
+      background: var(--chat-bg);
+    }
+
+    .chat-header {
+      height: 48px;
+      border-bottom: 1px solid #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-channel-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .chat-header-topic {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .chat-header-right {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #0f172a;
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      background: radial-gradient(circle at top, #020617, #020617);
+    }
+
+    .message {
+      margin-bottom: 10px;
       display: flex;
       gap: 8px;
-      margin-bottom: 14px;
     }
 
-    input {
-      flex: 1;
-      padding: 10px 12px;
+    .message-avatar {
+      width: 32px;
+      height: 32px;
       border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.9);
+      background: #111827;
+      flex-shrink: 0;
+    }
+
+    .message-content {
+      flex: 1;
+    }
+
+    .message-header {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .message-author {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .message-author.me {
+      color: var(--user-me);
+    }
+
+    .message-author.bot {
+      color: var(--user-bot);
+    }
+
+    .message-time {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .message-text {
+      font-size: 13px;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .message-badge {
+      font-size: 10px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .chat-input-bar {
+      border-top: 1px solid #1f2937;
+      padding: 8px 12px;
+      background: var(--bg-alt);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: var(--input-bg);
       color: var(--text);
       font-size: 13px;
       outline: none;
     }
 
-    input::placeholder {
+    .input-row input::placeholder {
       color: #6b7280;
     }
 
-    button {
-      padding: 10px 16px;
-      border-radius: 999px;
+    .input-row button {
+      padding: 8px 14px;
+      border-radius: 8px;
       border: none;
-      background: radial-gradient(circle at top left, #f97316, #ea580c);
+      background: var(--accent2);
       color: #020617;
       font-weight: 600;
       font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 12px 30px rgba(248,113,22,0.6);
-      position: relative;
-      overflow: hidden;
     }
 
-    button::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.2s ease;
+    .input-row button:hover {
+      background: #0ea5e9;
     }
 
-    button:hover::after {
-      opacity: 1;
-    }
-
-    .hint {
-      font-size: 11px;
+    .input-hint {
+      font-size: 10px;
       color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    .result-card {
-      margin-top: 8px;
-      padding: 14px;
-      border-radius: 16px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(55,65,81,0.9);
       display: flex;
-      gap: 12px;
+      justify-content: space-between;
       align-items: center;
-      min-height: 80px;
     }
 
-    .cat-art {
-      width: 80px;
-      height: 80px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
+    .input-hint span.key {
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #374151;
+      background: #0f172a;
+      font-size: 9px;
     }
 
-    .cat-info-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .cat-info-desc {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .cat-tags {
-      font-size: 11px;
-      color: var(--muted);
+    @media (max-width: 720px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <div class="title">
-      Cat searcher <span>internet lab</span>
-    </div>
-    <div class="sub">
-      Type a word like <strong>rainbow</strong>, <strong>grumpy</strong>, or <strong>space</strong> and see which cat appears.
-    </div>
+  <div class="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo"></div>
+        <div class="workspace-name">catslikecookies2211</div>
+      </div>
 
-    <div class="search-row">
-      <input id="query" placeholder="try: rainbow, grumpy, space, sleepy, cookie..." />
-      <button id="searchBtn">Search cat 🔍</button>
-    </div>
+      <div class="sidebar-section-title">Text channels</div>
+      <div class="channel-list" id="channelList">
+        <!-- channels will be added by JS -->
+      </div>
 
-    <div class="hint">
-      This doesn’t go to the real internet—it’s your own tiny “cat internet” with custom results.
-    </div>
-
-    <div class="result-card" id="result">
-      <div class="cat-art" id="catArt">🐱</div>
-      <div>
-        <div class="cat-info-title" id="catTitle">Waiting for a search…</div>
-        <div class="cat-info-desc" id="catDesc">
-          Type something above to see what kind of cat your word matches.
+      <div class="sidebar-footer">
+        <div class="user-avatar"></div>
+        <div class="user-info">
+          <div class="user-name">Miles</div>
+          <div class="user-status">online · local chat only</div>
         </div>
-        <div class="cat-tags" id="catTags">No tags yet.</div>
+      </div>
+    </div>
+
+    <div class="chat">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <span class="chat-channel-name" id="chatChannelName">#general</span>
+          <span class="chat-header-topic" id="chatChannelTopic">Welcome to your mini Discord‑style chat.</span>
+        </div>
+        <div class="chat-header-right">
+          <span class="pill">local only</span>
+          <span class="pill">messages saved in this browser</span>
+        </div>
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <!-- messages go here -->
+      </div>
+
+      <div class="chat-input-bar">
+        <div class="input-row">
+          <input id="messageInput" placeholder="Message #general">
+          <button id="sendBtn">Send</button>
+        </div>
+        <div class="input-hint">
+          <span>Press <span class="key">Enter</span> to send · This is just on your device.</span>
+          <span>Try switching channels on the left.</span>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    const searchBtn = document.getElementById('searchBtn');
-    const queryInput = document.getElementById('query');
-    const catArt = document.getElementById('catArt');
-    const catTitle = document.getElementById('catTitle');
-    const catDesc = document.getElementById('catDesc');
-    const catTags = document.getElementById('catTags');
+    const channels = [
+      { id: 'general', name: 'general', topic: 'Welcome to your main chat room.' },
+      { id: 'cats', name: 'cats', topic: 'All things cats, cookies, and chaos.' },
+      { id: 'ideas', name: 'ideas', topic: 'Drop random project ideas here.' },
+      { id: 'random', name: 'random', topic: 'Anything goes. Keep it fun.' }
+    ];
 
-    function getCatResult(word) {
-      const q = word.toLowerCase().trim();
+    const channelListEl = document.getElementById('channelList');
+    const chatBodyEl = document.getElementById('chatBody');
+    const chatChannelNameEl = document.getElementById('chatChannelName');
+    const chatChannelTopicEl = document.getElementById('chatChannelTopic');
+    const messageInputEl = document.getElementById('messageInput');
+    const sendBtnEl = document.getElementById('sendBtn');
 
-      if (!q) {
-        return {
-          emoji: '🐱',
-          title: 'Empty search cat',
-          desc: 'You didn’t type anything, so this cat is just chilling.',
-          tags: 'neutral · idle · waiting'
-        };
+    let currentChannelId = 'general';
+
+    function storageKey(channelId) {
+      return 'catslikecookies2211_chat_' + channelId;
+    }
+
+    function loadMessages(channelId) {
+      const raw = localStorage.getItem(storageKey(channelId));
+      if (!raw) return [];
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return [];
       }
+    }
 
-      if (q.includes('rainbow')) {
-        return {
-          emoji: '🌈🐱',
-          title: 'Rainbow trail cat',
-          desc: 'A nyan‑style rainbow cat zooming across the sky in your imagination.',
-          tags: 'colorful · fast · meme vibes'
+    function saveMessages(channelId, messages) {
+      localStorage.setItem(storageKey(channelId), JSON.stringify(messages));
+    }
+
+    function renderChannels() {
+      channelListEl.innerHTML = '';
+      channels.forEach(ch => {
+        const div = document.createElement('div');
+        div.className = 'channel' + (ch.id === currentChannelId ? ' active' : '');
+        div.dataset.channelId = ch.id;
+
+        const hash = document.createElement('span');
+        hash.className = 'hash';
+        hash.textContent = '#';
+
+        const name = document.createElement('span');
+        name.textContent = ch.name;
+
+        div.appendChild(hash);
+        div.appendChild(name);
+
+        div.addEventListener('click', () => {
+          currentChannelId = ch.id;
+          renderChannels();
+          switchChannel(ch);
+        });
+
+        channelListEl.appendChild(div);
+      });
+    }
+
+    function renderMessages(channelId) {
+      const messages = loadMessages(channelId);
+      chatBodyEl.innerHTML = '';
+
+      messages.forEach(msg => {
+        const row = document.createElement('div');
+        row.className = 'message';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+
+        const content = document.createElement('div');
+        content.className = 'message-content';
+
+        const header = document.createElement('div');
+        header.className = 'message-header';
+
+        const author = document.createElement('span');
+        author.className = 'message-author ' + (msg.author === 'Miles' ? 'me' : 'bot');
+        author.textContent = msg.author;
+
+        const time = document.createElement('span');
+        time.className = 'message-time';
+        time.textContent = msg.time;
+
+        header.appendChild(author);
+        header.appendChild(time);
+
+        if (msg.author !== 'Miles') {
+          const badge = document.createElement('span');
+          badge.className = 'message-badge';
+          badge.textContent = 'bot';
+          header.appendChild(badge);
+        }
+
+        const text = document.createElement('div');
+        text.className = 'message-text';
+        text.textContent = msg.text;
+
+        content.appendChild(header);
+        content.appendChild(text);
+
+        row.appendChild(avatar);
+        row.appendChild(content);
+
+        chatBodyEl.appendChild(row);
+      });
+
+      chatBodyEl.scrollTop = chatBodyEl.scrollHeight;
+    }
+
+    function switchChannel(channel) {
+      chatChannelNameEl.textContent = '#' + channel.name;
+      chatChannelTopicEl.textContent = channel.topic;
+      messageInputEl.placeholder = 'Message #' + channel.name;
+      renderMessages(channel.id);
+
+      // if channel empty, drop a welcome bot message
+      const messages = loadMessages(channel.id);
+      if (messages.length === 0) {
+        const welcome = {
+          author: 'ChatBot',
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          text: 'Welcome to #' + channel.name + '! This is a local-only chat. Only you see these messages.'
         };
+        messages.push(welcome);
+        saveMessages(channel.id, messages);
+        renderMessages(channel.id);
       }
+    }
 
-      if (q.includes('grumpy') || q.includes('mad') || q.includes('angry')) {
-        return {
-          emoji: '😾',
-          title: 'Grumpy mood cat',
-          desc: 'This cat is unimpressed with everything and probably judging your search.',
-          tags: 'grumpy · sarcastic · low patience'
-        };
-      }
+    function sendMessage() {
+      const text = messageInputEl.value.trim();
+      if (!text) return;
 
-      if (q.includes('space') || q.includes('galaxy') || q.includes('star')) {
-        return {
-          emoji: '🚀🐱',
-          title: 'Space explorer cat',
-          desc: 'Floating through the cosmos, chasing laser pointers among the stars.',
-          tags: 'cosmic · curious · zero‑gravity'
-        };
-      }
+      const messages = loadMessages(currentChannelId);
 
-      if (q.includes('sleep') || q.includes('tired') || q.includes('nap')) {
-        return {
-          emoji: '😴🐱',
-          title: 'Sleepy nap cat',
-          desc: 'Curled up in a warm spot, dreaming of endless treats and soft blankets.',
-          tags: 'cozy · calm · nap time'
-        };
-      }
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      if (q.includes('cookie') || q.includes('snack') || q.includes('food')) {
-        return {
-          emoji: '🍪🐱',
-          title: 'Snack hunter cat',
-          desc: 'Always on the lookout for crumbs, treats, and suspiciously unattended cookies.',
-          tags: 'hungry · sneaky · snack‑powered'
-        };
-      }
-
-      if (q.includes('zoom') || q.includes('fast') || q.includes('hyper')) {
-        return {
-          emoji: '⚡🐱',
-          title: 'Zoomies cat',
-          desc: 'Running full speed at 3am for absolutely no reason.',
-          tags: 'hyper · chaotic · high energy'
-        };
-      }
-
-      // default: unknown word
-      return {
-        emoji: '❓🐱',
-        title: 'Mystery internet cat',
-        desc: 'Your word doesn’t match a known cat yet, so this one is mysterious and unique.',
-        tags: 'unknown · custom · you decide the lore'
+      const userMsg = {
+        author: 'Miles',
+        time: timeStr,
+        text
       };
+
+      messages.push(userMsg);
+
+      // simple bot reply
+      let replyText = '';
+      const lower = text.toLowerCase();
+      if (lower.includes('hello') || lower.includes('hi')) {
+        replyText = 'Hey Miles 👋 This bot lives only in your browser.';
+      } else if (lower.includes('cat')) {
+        replyText = 'Cats, cookies, and chaos? Approved. 🐱🍪';
+      } else if (lower.includes('idea')) {
+        replyText = 'Drop your idea in #ideas and maybe build it later.';
+      } else if (lower.includes('help')) {
+        replyText = 'This is a fake Discord‑style chat. Real servers would need a backend.';
+      } else {
+        const replies = [
+          'Nice message. It is now stored locally.',
+          'If this were real Discord, others would see this too.',
+          'You can switch channels on the left and each has its own history.',
+          'Try typing “cat”, “idea”, or “help” for special replies.'
+        ];
+        replyText = replies[Math.floor(Math.random() * replies.length)];
+      }
+
+      const botMsg = {
+        author: 'ChatBot',
+        time: timeStr,
+        text: replyText
+      };
+
+      messages.push(botMsg);
+
+      saveMessages(currentChannelId, messages);
+      renderMessages(currentChannelId);
+
+      messageInputEl.value = '';
+      messageInputEl.focus();
     }
 
-    function runSearch() {
-      const word = queryInput.value;
-      const result = getCatResult(word);
-
-      catArt.textContent = result.emoji;
-      catTitle.textContent = result.title;
-      catDesc.textContent = result.desc;
-      catTags.textContent = result.tags;
-    }
-
-    searchBtn.addEventListener('click', runSearch);
-
-    queryInput.addEventListener('keydown', (e) => {
+    sendBtnEl.addEventListener('click', sendMessage);
+    messageInputEl.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        runSearch();
+        e.preventDefault();
+        sendMessage();
       }
     });
+
+    // init
+    renderChannels();
+    switchChannel(channels[0]);
   </script>
 </body>
 </html>
