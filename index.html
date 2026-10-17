@@ -1,142 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>catslikecookies2211</title>
   <meta charset="UTF-8">
+  <title>catslikecookies2211 · Mini Game Lab</title>
   <style>
     :root {
-      --bg-light: #f5f7ff;
-      --bg-dark: #050816;
-      --card-light: #ffffff;
-      --card-dark: #0f172a;
-      --text-light: #0f172a;
-      --text-dark: #e5e7eb;
-      --accent: #ff7ac4;
-      --accent2: #7af0ff;
+      --bg: #020617;
+      --card: #0f172a;
+      --accent: #22c55e;
+      --accent2: #38bdf8;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #1e293b, #020617);
-      color: var(--text-light);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .dark body {
-      background: radial-gradient(circle at top, #000000, #020617);
-      color: var(--text-dark);
-    }
-
-    .glow-orb {
-      position: fixed;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,122,196,0.35), transparent 70%);
-      pointer-events: none;
-      mix-blend-mode: screen;
-      transition: transform 0.15s ease-out;
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      width: min(900px, 90vw);
       padding: 24px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,64,175,0.85));
-      box-shadow: 0 30px 80px rgba(15,23,42,0.8);
-      border: 1px solid rgba(148,163,184,0.4);
-      backdrop-filter: blur(18px);
     }
 
-    .header {
+    .shell {
+      width: min(1100px, 100%);
+    }
+
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 18px;
     }
 
-    .logo {
+    .brand {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .logo-icon {
+    .brand-icon {
       width: 32px;
       height: 32px;
       border-radius: 999px;
-      background: conic-gradient(from 180deg, #ff7ac4, #7af0ff, #a855f7, #ff7ac4);
-      box-shadow: 0 0 20px rgba(248,250,252,0.5);
+      background: conic-gradient(from 180deg, #22c55e, #38bdf8, #a855f7, #22c55e);
+      box-shadow: 0 0 18px rgba(34,197,94,0.7);
     }
 
-    .logo-text {
+    .brand-text {
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 12px;
-      color: #e5e7eb;
     }
 
-    .toggle {
+    .mode-toggle {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      font-size: 11px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.8);
-      border: 1px solid rgba(148,163,184,0.6);
-      color: #e5e7eb;
-      font-size: 11px;
       cursor: pointer;
       user-select: none;
     }
 
-    .toggle-knob {
-      width: 18px;
-      height: 18px;
+    .mode-dot {
+      width: 14px;
+      height: 14px;
       border-radius: 999px;
       background: radial-gradient(circle, #facc15, #f97316);
-      box-shadow: 0 0 12px rgba(250,204,21,0.7);
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 10px rgba(250,204,21,0.7);
+      transition: transform 0.2s ease, background 0.2s ease;
     }
 
-    .dark .toggle-knob {
-      transform: translateX(16px);
-      background: radial-gradient(circle, #22d3ee, #0ea5e9);
-      box-shadow: 0 0 12px rgba(56,189,248,0.7);
-    }
-
-    .main {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    @media (max-width: 720px) {
-      .main {
-        grid-template-columns: 1fr;
-      }
+    .dark .mode-dot {
+      transform: translateX(12px);
+      background: radial-gradient(circle, #38bdf8, #0ea5e9);
     }
 
     .hero {
-      padding: 18px 18px 16px;
+      padding: 18px 18px 14px;
       border-radius: 18px;
-      background: radial-gradient(circle at top left, rgba(248,250,252,0.08), rgba(15,23,42,0.9));
-      border: 1px solid rgba(148,163,184,0.5);
+      background: radial-gradient(circle at top left, rgba(248,250,252,0.08), rgba(15,23,42,0.95));
+      border: 1px solid rgba(148,163,184,0.6);
+      margin-bottom: 18px;
       position: relative;
       overflow: hidden;
     }
@@ -149,9 +107,9 @@
       border-radius: 999px;
       background: rgba(15,23,42,0.9);
       border: 1px solid rgba(148,163,184,0.7);
-      color: #e5e7eb;
       font-size: 11px;
-      margin-bottom: 10px;
+      color: var(--muted);
+      margin-bottom: 8px;
     }
 
     .hero-pill-dot {
@@ -166,45 +124,44 @@
       font-size: clamp(26px, 4vw, 32px);
       font-weight: 800;
       line-height: 1.1;
-      color: #f9fafb;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .hero-gradient {
-      background: linear-gradient(120deg, #ff7ac4, #7af0ff, #a855f7);
+      background: linear-gradient(120deg, #22c55e, #38bdf8, #a855f7);
       -webkit-background-clip: text;
       color: transparent;
     }
 
     .hero-sub {
       font-size: 13px;
-      color: #cbd5f5;
-      max-width: 420px;
-      margin-bottom: 14px;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 12px;
     }
 
-    .hero-buttons {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
-    .btn-primary {
+    .hero-btn {
       padding: 9px 16px;
       border-radius: 999px;
       border: none;
-      background: radial-gradient(circle at top left, #ff7ac4, #a855f7);
-      color: #0b1020;
-      font-weight: 600;
+      background: radial-gradient(circle at top left, #22c55e, #16a34a);
+      color: #020617;
       font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 12px 30px rgba(248,113,191,0.6);
+      box-shadow: 0 12px 30px rgba(34,197,94,0.6);
       position: relative;
       overflow: hidden;
     }
 
-    .btn-primary::after {
+    .hero-btn::after {
       content: "";
       position: absolute;
       inset: 0;
@@ -213,344 +170,313 @@
       transition: opacity 0.2s ease;
     }
 
-    .btn-primary:hover::after {
+    .hero-btn:hover::after {
       opacity: 1;
     }
 
-    .btn-secondary {
-      padding: 9px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.9);
-      color: #e5e7eb;
-      font-size: 12px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-secondary-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #22c55e, #16a34a);
-    }
-
-    .hero-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+    .hero-tagline {
       font-size: 11px;
-      color: #9ca3af;
+      color: var(--muted);
     }
 
-    .hero-tag {
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px dashed rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.8);
-    }
-
-    .hero-orbit {
-      position: absolute;
-      right: -40px;
-      bottom: -40px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      border: 1px dashed rgba(148,163,184,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.7;
-    }
-
-    .hero-orbit-inner {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(248,250,252,0.2), transparent 70%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #e5e7eb;
-      text-align: center;
-      padding: 8px;
-    }
-
-    .side {
-      padding: 16px;
-      border-radius: 18px;
-      background: radial-gradient(circle at top right, rgba(248,250,252,0.06), rgba(15,23,42,0.95));
-      border: 1px solid rgba(148,163,184,0.5);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .side-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .side-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      font-size: 11px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
-    .side-card {
-      padding: 8px;
-      border-radius: 12px;
-      background: rgba(15,23,42,0.9);
+    .card {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(15,23,42,0.95);
       border: 1px solid rgba(55,65,81,0.9);
       position: relative;
       overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     }
 
-    .side-card-label {
-      color: #9ca3af;
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+      border-color: rgba(148,163,184,0.9);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
       margin-bottom: 4px;
     }
 
-    .side-card-value {
-      color: #e5e7eb;
-      font-weight: 600;
+    .card-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
 
-    .side-card-bar {
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .card-pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .card-bar {
       position: absolute;
       bottom: 0;
       left: 0;
       height: 3px;
-      background: linear-gradient(90deg, #ff7ac4, #7af0ff);
       width: 0;
-      animation: fillBar 2s ease forwards;
+      background: linear-gradient(90deg, #22c55e, #38bdf8);
+      transition: width 0.4s ease;
     }
 
-    .side-card:nth-child(2) .side-card-bar {
-      animation-delay: 0.2s;
-    }
-
-    .side-card:nth-child(3) .side-card-bar {
-      animation-delay: 0.4s;
-    }
-
-    .side-card:nth-child(4) .side-card-bar {
-      animation-delay: 0.6s;
-    }
-
-    @keyframes fillBar {
-      to {
-        width: 100%;
-      }
-    }
-
-    .activity {
-      font-size: 11px;
-      color: #9ca3af;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .activity-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .activity-pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(55,65,81,0.9);
-      color: #e5e7eb;
+    .card:hover .card-bar {
+      width: 100%;
     }
 
     .footer {
-      margin-top: 14px;
       font-size: 10px;
-      color: #6b7280;
+      color: var(--muted);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .cursor-trail {
-      position: fixed;
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #7af0ff, transparent 70%);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      z-index: 2;
+    .pulse {
+      animation: pulse 1.4s ease-in-out infinite;
     }
 
-    body:hover .cursor-trail {
-      opacity: 1;
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div class="glow-orb" id="glow"></div>
-  <div class="cursor-trail" id="trail"></div>
-
-  <div class="container">
-    <div class="header">
-      <div class="logo">
-        <div class="logo-icon"></div>
-        <div class="logo-text">catslikecookies2211</div>
+  <div class="shell">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-icon"></div>
+        <div class="brand-text">catslikecookies2211 · lab</div>
       </div>
-      <div class="toggle" id="modeToggle">
-        <span>Dark mode</span>
-        <div class="toggle-knob"></div>
+      <div class="mode-toggle" id="modeToggle">
+        <span id="modeLabel">Light mode</span>
+        <div class="mode-dot"></div>
       </div>
     </div>
 
-    <div class="main">
-      <div class="hero">
-        <div class="hero-pill">
-          <div class="hero-pill-dot"></div>
-          Live playground · v1.0
-        </div>
-        <h1 class="hero-title">
-          Making the web feel
-          <span class="hero-gradient">alive in 2026.</span>
-        </h1>
-        <p class="hero-sub">
-          Move your mouse, click the buttons, and watch the interface react.
-          This is your little interactive lab.
-        </p>
-
-        <div class="hero-buttons">
-          <button class="btn-primary" id="surpriseBtn">Surprise me ✨</button>
-          <button class="btn-secondary">
-            <span class="btn-secondary-dot"></span>
-            Micro‑interactions · hover, click, move
-          </button>
-        </div>
-
-        <div class="hero-tags">
-          <div class="hero-tag">Dark mode</div>
-          <div class="hero-tag">Animated stats</div>
-          <div class="hero-tag">Cursor glow</div>
-          <div class="hero-tag">2026 UI vibes</div>
-        </div>
-
-        <div class="hero-orbit">
-          <div class="hero-orbit-inner">
-            Built by Miles ·  
-            catslikecookies2211
-          </div>
-        </div>
+    <div class="hero">
+      <div class="hero-pill">
+        <div class="hero-pill-dot"></div>
+        100 tiny ideas · 1 playground
       </div>
-
-      <div class="side">
-        <div class="side-title">
-          Live stats
-          <span style="font-size:10px;color:#9ca3af;">auto‑animated</span>
-        </div>
-        <div class="side-grid">
-          <div class="side-card">
-            <div class="side-card-label">Clicks today</div>
-            <div class="side-card-value" id="clicksCount">0</div>
-            <div class="side-card-bar"></div>
-          </div>
-          <div class="side-card">
-            <div class="side-card-label">Mood level</div>
-            <div class="side-card-value" id="moodLevel">72%</div>
-            <div class="side-card-bar"></div>
-          </div>
-          <div class="side-card">
-            <div class="side-card-label">Chaos slider</div>
-            <div class="side-card-value" id="chaosLevel">12%</div>
-            <div class="side-card-bar"></div>
-          </div>
-          <div class="side-card">
-            <div class="side-card-label">Cookie energy</div>
-            <div class="side-card-value" id="cookieEnergy">98%</div>
-            <div class="side-card-bar"></div>
-          </div>
-        </div>
-
-        <div class="activity">
-          <div class="activity-row">
-            <span>Last interaction</span>
-            <span class="activity-pill" id="lastAction">Waiting for you…</span>
-          </div>
-          <div class="activity-row">
-            <span>Mode</span>
-            <span class="activity-pill" id="modeLabel">Light</span>
-          </div>
-        </div>
+      <h1 class="hero-title">
+        A wall of
+        <span class="hero-gradient">mini experiments</span>
+        you can grow.
+      </h1>
+      <p class="hero-sub">
+        Each card is a “game idea” you can turn into something real later.
+        For now, they react when you hover and click—like a little interactive catalog.
+      </p>
+      <div class="hero-actions">
+        <button class="hero-btn" id="randomHighlight">Highlight a random game 🎲</button>
+      </div>
+      <div class="hero-tagline">
+        Tip: Pick one card and actually build it someday.
       </div>
     </div>
+
+    <div class="grid" id="grid"></div>
 
     <div class="footer">
-      <span>Made with HTML + CSS + JS · no frameworks</span>
-      <span>Try clicking, hovering, and moving your mouse.</span>
+      <span>Made by Miles · HTML + CSS + JS only</span>
+      <span id="status">Click any card to “favorite” it.</span>
     </div>
   </div>
 
   <script>
-    const body = document.body;
+    const ideas = [
+      "Gravity Cookie Drop",
+      "Infinite Cat Scroll",
+      "Guess The Secret Snack",
+      "Pixel Cookie Painter",
+      "Chaos Slider Simulator",
+      "Mood Meter Mashup",
+      "Random Fact Roulette",
+      "Tiny Planet Explorer",
+      "Click Speed Challenge",
+      "Emoji Reaction Wall",
+      "Color Memory Test",
+      "Sound Guessing Game",
+      "Mini Maze Runner",
+      "Number Guess Duel",
+      "Pattern Tap Trainer",
+      "Cookie Factory Tycoon (tiny)",
+      "Orbiting Planets Toy",
+      "Bouncing Ball Sandbox",
+      "Shape Matching Puzzle",
+      "Reaction Time Meter",
+      "Coin Flip Universe",
+      "Dice Chaos Lab",
+      "Name Generator Machine",
+      "Random Story Starter",
+      "Tiny Weather Simulator",
+      "Day vs Night Switcher",
+      "Mini City Builder",
+      "Cat Mood Tracker",
+      "Cookie Click Counter",
+      "Keyboard Ninja Trainer",
+      "Mouse Trail Playground",
+      "Secret Code Cracker",
+      "Timeline Scrubber Toy",
+      "Mini Stock Graph Fake",
+      "Bubble Popper",
+      "Wave Visualizer",
+      "Starfield Scroller",
+      "Orbit Drag Experiment",
+      "Slider Art Maker",
+      "Random Button Adventure",
+      "Door Choice Game",
+      "Memory Card Flip",
+      "Path Drawing Sandbox",
+      "Pixel Grid Editor",
+      "Mini RPG Stats Panel",
+      "Inventory Clicker",
+      "Loot Box Simulator",
+      "Random Quest Generator",
+      "Tiny Farm Planner",
+      "Habit Tracker Toy",
+      "Sleep Schedule Visualizer",
+      "Energy Bar Simulator",
+      "Stress Meter (fake)",
+      "Focus Timer Toy",
+      "Goal Progress Rings",
+      "Calendar Dot Visualizer",
+      "Streak Counter",
+      "Random Challenge Wheel",
+      "Spin The Cookie",
+      "Cat vs Cookie Poll",
+      "Opinion Slider",
+      "Tiny Voting Booth",
+      "Mini Chat Mockup",
+      "Emoji Conversation Builder",
+      "Sentence Scrambler",
+      "Word Ladder Game",
+      "Typing Speed Meter",
+      "Keyboard Layout Toy",
+      "Language Guess Game",
+      "Flag Matching Puzzle",
+      "Map Pin Dropper",
+      "Route Drawing Toy",
+      "Traffic Flow Simulator",
+      "Train Schedule Visualizer",
+      "Airport Board Fake",
+      "Clock Time Zones",
+      "Sunrise/Sunset Visualizer",
+      "Season Wheel",
+      "Plant Growth Simulator",
+      "Water Level Slider",
+      "Wind Direction Toy",
+      "Earthquake Dot Map",
+      "Galaxy Zoom Toy",
+      "Black Hole Slider",
+      "Star Naming Game",
+      "Constellation Connect",
+      "Rocket Launch Countdown",
+      "Fuel Bar Simulator",
+      "Orbit Path Drawer",
+      "Satellite Tracker Fake",
+      "Signal Strength Meter",
+      "Wi‑Fi Wave Visualizer",
+      "Battery Drain Simulator",
+      "CPU Heat Meter",
+      "File Download Fake",
+      "Progress Bar Party",
+      "Notification Storm Toy",
+      "Settings Toggle Playground",
+      "Dark/Light Theme Mixer",
+      "Layout Shuffle Lab",
+      "Button Style Gallery",
+      "Micro‑interaction Tester"
+    ];
+
+    const grid = document.getElementById('grid');
+    const status = document.getElementById('status');
     const modeToggle = document.getElementById('modeToggle');
     const modeLabel = document.getElementById('modeLabel');
-    const glow = document.getElementById('glow');
-    const trail = document.getElementById('trail');
-    const surpriseBtn = document.getElementById('surpriseBtn');
-    const clicksCount = document.getElementById('clicksCount');
-    const moodLevel = document.getElementById('moodLevel');
-    const chaosLevel = document.getElementById('chaosLevel');
-    const cookieEnergy = document.getElementById('cookieEnergy');
-    const lastAction = document.getElementById('lastAction');
+    const body = document.body;
+    const randomHighlightBtn = document.getElementById('randomHighlight');
 
-    let clicks = 0;
+    ideas.forEach((title, index) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const cardTitle = document.createElement('div');
+      cardTitle.className = 'card-title';
+      cardTitle.textContent = title;
+
+      const cardSub = document.createElement('div');
+      cardSub.className = 'card-sub';
+      cardSub.textContent = "Idea #" + (index + 1) + " · not built yet, just a concept.";
+
+      const cardMeta = document.createElement('div');
+      cardMeta.className = 'card-meta';
+
+      const left = document.createElement('span');
+      left.textContent = "Tap to favorite";
+
+      const pill = document.createElement('span');
+      pill.className = 'card-pill';
+      pill.textContent = "concept";
+
+      const bar = document.createElement('div');
+      bar.className = 'card-bar';
+
+      cardMeta.appendChild(left);
+      cardMeta.appendChild(pill);
+
+      card.appendChild(cardTitle);
+      card.appendChild(cardSub);
+      card.appendChild(cardMeta);
+      card.appendChild(bar);
+
+      card.addEventListener('click', () => {
+        card.classList.toggle('pulse');
+        const fav = card.classList.contains('pulse');
+        status.textContent = fav
+          ? "You favorited: " + title
+          : "You unfavorited: " + title;
+      });
+
+      grid.appendChild(card);
+    });
 
     modeToggle.addEventListener('click', () => {
       body.classList.toggle('dark');
       const dark = body.classList.contains('dark');
-      modeLabel.textContent = dark ? 'Dark' : 'Light';
-      lastAction.textContent = dark ? 'Switched to dark mode' : 'Back to light mode';
+      modeLabel.textContent = dark ? "Dark mode" : "Light mode";
     });
 
-    document.addEventListener('mousemove', (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      glow.style.transform = `translate(${x - 200}px, ${y - 200}px)`;
-      trail.style.transform = `translate(${x - 4}px, ${y - 4}px)`;
-    });
-
-    surpriseBtn.addEventListener('click', () => {
-      clicks++;
-      clicksCount.textContent = clicks;
-
-      const mood = 50 + Math.floor(Math.random() * 50);
-      const chaos = Math.floor(Math.random() * 100);
-      const cookies = 60 + Math.floor(Math.random() * 40);
-
-      moodLevel.textContent = mood + '%';
-      chaosLevel.textContent = chaos + '%';
-      cookieEnergy.textContent = cookies + '%';
-
-      const messages = [
-        'You unlocked secret cookie energy.',
-        'Micro‑interaction achieved.',
-        'The web just got a bit cooler.',
-        'Chaos level recalibrated.',
-        'New vibe detected.'
-      ];
-      lastAction.textContent = messages[Math.floor(Math.random() * messages.length)];
+    randomHighlightBtn.addEventListener('click', () => {
+      const cards = Array.from(document.querySelectorAll('.card'));
+      if (!cards.length) return;
+      cards.forEach(c => c.classList.remove('pulse'));
+      const random = cards[Math.floor(Math.random() * cards.length)];
+      random.classList.add('pulse');
+      status.textContent = "Random pick: " + random.querySelector('.card-title').textContent;
+      random.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   </script>
 </body>
