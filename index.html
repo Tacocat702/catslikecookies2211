@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>catslikecookies2211 · Mini Game Lab</title>
+  <title>Cat Searcher · catslikecookies2211</title>
   <style>
     :root {
       --bg: #020617;
       --card: #0f172a;
-      --accent: #22c55e;
+      --accent: #f97316;
       --accent2: #38bdf8;
       --text: #e5e7eb;
       --muted: #9ca3af;
@@ -25,143 +25,74 @@
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
       padding: 24px;
     }
 
     .shell {
-      width: min(1100px, 100%);
-    }
-
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: conic-gradient(from 180deg, #22c55e, #38bdf8, #a855f7, #22c55e);
-      box-shadow: 0 0 18px rgba(34,197,94,0.7);
-    }
-
-    .brand-text {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .mode-toggle {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: rgba(15,23,42,0.9);
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .mode-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #facc15, #f97316);
-      box-shadow: 0 0 10px rgba(250,204,21,0.7);
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .dark .mode-dot {
-      transform: translateX(12px);
-      background: radial-gradient(circle, #38bdf8, #0ea5e9);
-    }
-
-    .hero {
-      padding: 18px 18px 14px;
-      border-radius: 18px;
+      width: min(700px, 100%);
+      padding: 20px;
+      border-radius: 20px;
       background: radial-gradient(circle at top left, rgba(248,250,252,0.08), rgba(15,23,42,0.95));
       border: 1px solid rgba(148,163,184,0.6);
-      margin-bottom: 18px;
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(15,23,42,0.9);
     }
 
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.7);
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .hero-pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #22c55e, #16a34a);
-      box-shadow: 0 0 10px rgba(34,197,94,0.8);
-    }
-
-    .hero-title {
-      font-size: clamp(26px, 4vw, 32px);
+    .title {
+      font-size: 24px;
       font-weight: 800;
-      line-height: 1.1;
       margin-bottom: 6px;
     }
 
-    .hero-gradient {
-      background: linear-gradient(120deg, #22c55e, #38bdf8, #a855f7);
+    .title span {
+      background: linear-gradient(120deg, #f97316, #38bdf8, #a855f7);
       -webkit-background-clip: text;
       color: transparent;
     }
 
-    .hero-sub {
+    .sub {
       font-size: 13px;
       color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .hero-actions {
+    .search-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
 
-    .hero-btn {
-      padding: 9px 16px;
+    input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #6b7280;
+    }
+
+    button {
+      padding: 10px 16px;
       border-radius: 999px;
       border: none;
-      background: radial-gradient(circle at top left, #22c55e, #16a34a);
+      background: radial-gradient(circle at top left, #f97316, #ea580c);
       color: #020617;
-      font-size: 13px;
       font-weight: 600;
+      font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 12px 30px rgba(34,197,94,0.6);
+      box-shadow: 0 12px 30px rgba(248,113,22,0.6);
       position: relative;
       overflow: hidden;
     }
 
-    .hero-btn::after {
+    button::after {
       content: "";
       position: absolute;
       inset: 0;
@@ -170,313 +101,185 @@
       transition: opacity 0.2s ease;
     }
 
-    .hero-btn:hover::after {
+    button:hover::after {
       opacity: 1;
     }
 
-    .hero-tagline {
+    .hint {
       font-size: 11px;
       color: var(--muted);
+      margin-bottom: 12px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .card {
-      padding: 12px;
-      border-radius: 14px;
+    .result-card {
+      margin-top: 8px;
+      padding: 14px;
+      border-radius: 16px;
       background: rgba(15,23,42,0.95);
       border: 1px solid rgba(55,65,81,0.9);
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-height: 80px;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
-      border-color: rgba(148,163,184,0.9);
+    .cat-art {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
     }
 
-    .card-title {
-      font-size: 13px;
+    .cat-info-title {
+      font-size: 15px;
       font-weight: 600;
       margin-bottom: 4px;
     }
 
-    .card-sub {
+    .cat-info-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .cat-tags {
       font-size: 11px;
       color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .card-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      color: var(--muted);
-    }
-
-    .card-pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(75,85,99,0.9);
-      background: rgba(15,23,42,0.9);
-    }
-
-    .card-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      width: 0;
-      background: linear-gradient(90deg, #22c55e, #38bdf8);
-      transition: width 0.4s ease;
-    }
-
-    .card:hover .card-bar {
-      width: 100%;
-    }
-
-    .footer {
-      font-size: 10px;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .pulse {
-      animation: pulse 1.4s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.04); opacity: 0.8; }
-      100% { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
   <div class="shell">
-    <div class="top-bar">
-      <div class="brand">
-        <div class="brand-icon"></div>
-        <div class="brand-text">catslikecookies2211 · lab</div>
-      </div>
-      <div class="mode-toggle" id="modeToggle">
-        <span id="modeLabel">Light mode</span>
-        <div class="mode-dot"></div>
-      </div>
+    <div class="title">
+      Cat searcher <span>internet lab</span>
+    </div>
+    <div class="sub">
+      Type a word like <strong>rainbow</strong>, <strong>grumpy</strong>, or <strong>space</strong> and see which cat appears.
     </div>
 
-    <div class="hero">
-      <div class="hero-pill">
-        <div class="hero-pill-dot"></div>
-        100 tiny ideas · 1 playground
-      </div>
-      <h1 class="hero-title">
-        A wall of
-        <span class="hero-gradient">mini experiments</span>
-        you can grow.
-      </h1>
-      <p class="hero-sub">
-        Each card is a “game idea” you can turn into something real later.
-        For now, they react when you hover and click—like a little interactive catalog.
-      </p>
-      <div class="hero-actions">
-        <button class="hero-btn" id="randomHighlight">Highlight a random game 🎲</button>
-      </div>
-      <div class="hero-tagline">
-        Tip: Pick one card and actually build it someday.
-      </div>
+    <div class="search-row">
+      <input id="query" placeholder="try: rainbow, grumpy, space, sleepy, cookie..." />
+      <button id="searchBtn">Search cat 🔍</button>
     </div>
 
-    <div class="grid" id="grid"></div>
+    <div class="hint">
+      This doesn’t go to the real internet—it’s your own tiny “cat internet” with custom results.
+    </div>
 
-    <div class="footer">
-      <span>Made by Miles · HTML + CSS + JS only</span>
-      <span id="status">Click any card to “favorite” it.</span>
+    <div class="result-card" id="result">
+      <div class="cat-art" id="catArt">🐱</div>
+      <div>
+        <div class="cat-info-title" id="catTitle">Waiting for a search…</div>
+        <div class="cat-info-desc" id="catDesc">
+          Type something above to see what kind of cat your word matches.
+        </div>
+        <div class="cat-tags" id="catTags">No tags yet.</div>
+      </div>
     </div>
   </div>
 
   <script>
-    const ideas = [
-      "Gravity Cookie Drop",
-      "Infinite Cat Scroll",
-      "Guess The Secret Snack",
-      "Pixel Cookie Painter",
-      "Chaos Slider Simulator",
-      "Mood Meter Mashup",
-      "Random Fact Roulette",
-      "Tiny Planet Explorer",
-      "Click Speed Challenge",
-      "Emoji Reaction Wall",
-      "Color Memory Test",
-      "Sound Guessing Game",
-      "Mini Maze Runner",
-      "Number Guess Duel",
-      "Pattern Tap Trainer",
-      "Cookie Factory Tycoon (tiny)",
-      "Orbiting Planets Toy",
-      "Bouncing Ball Sandbox",
-      "Shape Matching Puzzle",
-      "Reaction Time Meter",
-      "Coin Flip Universe",
-      "Dice Chaos Lab",
-      "Name Generator Machine",
-      "Random Story Starter",
-      "Tiny Weather Simulator",
-      "Day vs Night Switcher",
-      "Mini City Builder",
-      "Cat Mood Tracker",
-      "Cookie Click Counter",
-      "Keyboard Ninja Trainer",
-      "Mouse Trail Playground",
-      "Secret Code Cracker",
-      "Timeline Scrubber Toy",
-      "Mini Stock Graph Fake",
-      "Bubble Popper",
-      "Wave Visualizer",
-      "Starfield Scroller",
-      "Orbit Drag Experiment",
-      "Slider Art Maker",
-      "Random Button Adventure",
-      "Door Choice Game",
-      "Memory Card Flip",
-      "Path Drawing Sandbox",
-      "Pixel Grid Editor",
-      "Mini RPG Stats Panel",
-      "Inventory Clicker",
-      "Loot Box Simulator",
-      "Random Quest Generator",
-      "Tiny Farm Planner",
-      "Habit Tracker Toy",
-      "Sleep Schedule Visualizer",
-      "Energy Bar Simulator",
-      "Stress Meter (fake)",
-      "Focus Timer Toy",
-      "Goal Progress Rings",
-      "Calendar Dot Visualizer",
-      "Streak Counter",
-      "Random Challenge Wheel",
-      "Spin The Cookie",
-      "Cat vs Cookie Poll",
-      "Opinion Slider",
-      "Tiny Voting Booth",
-      "Mini Chat Mockup",
-      "Emoji Conversation Builder",
-      "Sentence Scrambler",
-      "Word Ladder Game",
-      "Typing Speed Meter",
-      "Keyboard Layout Toy",
-      "Language Guess Game",
-      "Flag Matching Puzzle",
-      "Map Pin Dropper",
-      "Route Drawing Toy",
-      "Traffic Flow Simulator",
-      "Train Schedule Visualizer",
-      "Airport Board Fake",
-      "Clock Time Zones",
-      "Sunrise/Sunset Visualizer",
-      "Season Wheel",
-      "Plant Growth Simulator",
-      "Water Level Slider",
-      "Wind Direction Toy",
-      "Earthquake Dot Map",
-      "Galaxy Zoom Toy",
-      "Black Hole Slider",
-      "Star Naming Game",
-      "Constellation Connect",
-      "Rocket Launch Countdown",
-      "Fuel Bar Simulator",
-      "Orbit Path Drawer",
-      "Satellite Tracker Fake",
-      "Signal Strength Meter",
-      "Wi‑Fi Wave Visualizer",
-      "Battery Drain Simulator",
-      "CPU Heat Meter",
-      "File Download Fake",
-      "Progress Bar Party",
-      "Notification Storm Toy",
-      "Settings Toggle Playground",
-      "Dark/Light Theme Mixer",
-      "Layout Shuffle Lab",
-      "Button Style Gallery",
-      "Micro‑interaction Tester"
-    ];
+    const searchBtn = document.getElementById('searchBtn');
+    const queryInput = document.getElementById('query');
+    const catArt = document.getElementById('catArt');
+    const catTitle = document.getElementById('catTitle');
+    const catDesc = document.getElementById('catDesc');
+    const catTags = document.getElementById('catTags');
 
-    const grid = document.getElementById('grid');
-    const status = document.getElementById('status');
-    const modeToggle = document.getElementById('modeToggle');
-    const modeLabel = document.getElementById('modeLabel');
-    const body = document.body;
-    const randomHighlightBtn = document.getElementById('randomHighlight');
+    function getCatResult(word) {
+      const q = word.toLowerCase().trim();
 
-    ideas.forEach((title, index) => {
-      const card = document.createElement('div');
-      card.className = 'card';
+      if (!q) {
+        return {
+          emoji: '🐱',
+          title: 'Empty search cat',
+          desc: 'You didn’t type anything, so this cat is just chilling.',
+          tags: 'neutral · idle · waiting'
+        };
+      }
 
-      const cardTitle = document.createElement('div');
-      cardTitle.className = 'card-title';
-      cardTitle.textContent = title;
+      if (q.includes('rainbow')) {
+        return {
+          emoji: '🌈🐱',
+          title: 'Rainbow trail cat',
+          desc: 'A nyan‑style rainbow cat zooming across the sky in your imagination.',
+          tags: 'colorful · fast · meme vibes'
+        };
+      }
 
-      const cardSub = document.createElement('div');
-      cardSub.className = 'card-sub';
-      cardSub.textContent = "Idea #" + (index + 1) + " · not built yet, just a concept.";
+      if (q.includes('grumpy') || q.includes('mad') || q.includes('angry')) {
+        return {
+          emoji: '😾',
+          title: 'Grumpy mood cat',
+          desc: 'This cat is unimpressed with everything and probably judging your search.',
+          tags: 'grumpy · sarcastic · low patience'
+        };
+      }
 
-      const cardMeta = document.createElement('div');
-      cardMeta.className = 'card-meta';
+      if (q.includes('space') || q.includes('galaxy') || q.includes('star')) {
+        return {
+          emoji: '🚀🐱',
+          title: 'Space explorer cat',
+          desc: 'Floating through the cosmos, chasing laser pointers among the stars.',
+          tags: 'cosmic · curious · zero‑gravity'
+        };
+      }
 
-      const left = document.createElement('span');
-      left.textContent = "Tap to favorite";
+      if (q.includes('sleep') || q.includes('tired') || q.includes('nap')) {
+        return {
+          emoji: '😴🐱',
+          title: 'Sleepy nap cat',
+          desc: 'Curled up in a warm spot, dreaming of endless treats and soft blankets.',
+          tags: 'cozy · calm · nap time'
+        };
+      }
 
-      const pill = document.createElement('span');
-      pill.className = 'card-pill';
-      pill.textContent = "concept";
+      if (q.includes('cookie') || q.includes('snack') || q.includes('food')) {
+        return {
+          emoji: '🍪🐱',
+          title: 'Snack hunter cat',
+          desc: 'Always on the lookout for crumbs, treats, and suspiciously unattended cookies.',
+          tags: 'hungry · sneaky · snack‑powered'
+        };
+      }
 
-      const bar = document.createElement('div');
-      bar.className = 'card-bar';
+      if (q.includes('zoom') || q.includes('fast') || q.includes('hyper')) {
+        return {
+          emoji: '⚡🐱',
+          title: 'Zoomies cat',
+          desc: 'Running full speed at 3am for absolutely no reason.',
+          tags: 'hyper · chaotic · high energy'
+        };
+      }
 
-      cardMeta.appendChild(left);
-      cardMeta.appendChild(pill);
+      // default: unknown word
+      return {
+        emoji: '❓🐱',
+        title: 'Mystery internet cat',
+        desc: 'Your word doesn’t match a known cat yet, so this one is mysterious and unique.',
+        tags: 'unknown · custom · you decide the lore'
+      };
+    }
 
-      card.appendChild(cardTitle);
-      card.appendChild(cardSub);
-      card.appendChild(cardMeta);
-      card.appendChild(bar);
+    function runSearch() {
+      const word = queryInput.value;
+      const result = getCatResult(word);
 
-      card.addEventListener('click', () => {
-        card.classList.toggle('pulse');
-        const fav = card.classList.contains('pulse');
-        status.textContent = fav
-          ? "You favorited: " + title
-          : "You unfavorited: " + title;
-      });
+      catArt.textContent = result.emoji;
+      catTitle.textContent = result.title;
+      catDesc.textContent = result.desc;
+      catTags.textContent = result.tags;
+    }
 
-      grid.appendChild(card);
-    });
+    searchBtn.addEventListener('click', runSearch);
 
-    modeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      const dark = body.classList.contains('dark');
-      modeLabel.textContent = dark ? "Dark mode" : "Light mode";
-    });
-
-    randomHighlightBtn.addEventListener('click', () => {
-      const cards = Array.from(document.querySelectorAll('.card'));
-      if (!cards.length) return;
-      cards.forEach(c => c.classList.remove('pulse'));
-      const random = cards[Math.floor(Math.random() * cards.length)];
-      random.classList.add('pulse');
-      status.textContent = "Random pick: " + random.querySelector('.card-title').textContent;
-      random.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    queryInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        runSearch();
+      }
     });
   </script>
 </body>
